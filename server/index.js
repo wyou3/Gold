@@ -21,7 +21,7 @@ app.get('/prices', async (req, res) => {
     let dataObject = window.Highcharts.charts[0].series[0].data
     let chartData = Object.keys(dataObject).map(key => {
       let point = dataObject[key]
-      return { x: point.x, y: point.y }
+      return { x: point.x.toFixed(2), y: point.y.toFixed(2) }
     })
     return chartData
   })

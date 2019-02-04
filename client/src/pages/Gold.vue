@@ -45,7 +45,7 @@ export default {
     Services.getPrices().then(res => {
       this.dataPoints = res.data;
       this.startPrice = res.data[0].y;
-      this.price = res.data[res.data.length - 1].y.toFixed(2);
+      this.price = res.data[res.data.length - 1].y;
       let labels = this.dataPoints.map(point =>
         moment.unix(point.x / 1000).format("MM/DD/YYYY")
       );
@@ -82,7 +82,7 @@ export default {
       );
       this.fillChartData(labels, chartPoints);
       this.startPrice = chartPoints[0].y;
-      this.price = chartPoints[chartPoints.length - 1].y.toFixed(2);
+      this.price = chartPoints[chartPoints.length - 1].y;
       this.toggleSelectedWindow(window);
     }
   }
