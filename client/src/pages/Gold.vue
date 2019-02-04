@@ -77,7 +77,7 @@ export default {
       let startIndex = Math.floor(numPoints * (1 - window.percentYear));
       let chartPoints = this.dataPoints.slice(startIndex);
       let labels = chartPoints.map(point =>
-        moment.unix(point.x / 1000).format("MM/DD/YYYY")
+        moment.unix(point.x / 1000).format("MMM Do YYYY")
       );
       this.fillChartData(labels, chartPoints);
       this.startPrice = chartPoints[0].y;
@@ -116,7 +116,9 @@ export default {
   line-height: 30px;
   text-align: center;
 }
-.timelineSelector:hover,
+.timelineSelector:hover {
+  color: #c5b358;
+}
 .timeSelected {
   border: 2px solid #c5b358;
   color: #c5b358;

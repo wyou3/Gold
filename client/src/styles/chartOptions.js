@@ -4,6 +4,22 @@ export default {
   legend: {
     display: false
   },
+  tooltip: {
+    enabled: true
+  },
+  tooltips: {
+    callbacks: {
+      label: (tooltipItem, data) => {
+        var label = data.datasets[tooltipItem.datasetIndex].label || ''
+        if (label) {
+          label += ': '
+        }
+        label += tooltipItem.yLabel.toFixed(2)
+        label = '$' + label
+        return label
+      }
+    }
+  },
   scales: {
     xAxes: [
       {
