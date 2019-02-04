@@ -1,7 +1,8 @@
 <template>
   <div id="gold">
     <price-ticker :price="price" :start-price="startPrice"></price-ticker>
-    <line-chart :chart-data="datacollection" :options="chartOptions"></line-chart>
+    <ball-spin-fade-loader v-if="loading" class="loading-spinner" color="#000000" size="20px"></ball-spin-fade-loader>
+    <line-chart else :class="{hide: loading}" :chart-data="datacollection" :options="chartOptions"></line-chart>
     <div class="timeline">
       <h3
         :key="window.name"
@@ -19,6 +20,7 @@ import Services from "../services/services.js";
 import PriceTicker from "../components/PriceTicker.vue";
 import LineChart from "../components/LineChart.js";
 import ChartOptions from "../styles/chartOptions.js";
+import { BallSpinFade } from "vue-loaders";
 
 export default {
   name: "GoldChart",
@@ -28,28 +30,25 @@ export default {
   },
   data() {
     return {
+      loading: true,
       price: 0,
       startPrice: 0,
       dataPoints: [],
       datacollection: null,
       chartOptions: ChartOptions,
       timeWindows: [
-        { name: "1M", percentYear: 1 / 12, selected: false },
+        { name: "1M", percentYear: 1 / 12, selected: true },
         { name: "3M", percentYear: 1 / 4, selected: false },
         { name: "6M", percentYear: 1 / 2, selected: false },
-        { name: "1Y", percentYear: 1, selected: true }
+        { name: "1Y", percentYear: 1, selected: false }
       ]
     };
   },
   mounted() {
     Services.getPrices().then(res => {
       this.dataPoints = res.data;
-      this.startPrice = res.data[0].y;
-      this.price = res.data[res.data.length - 1].y;
-      let labels = this.dataPoints.map(point =>
-        moment.unix(point.x / 1000).format("MM/DD/YYYY")
-      );
-      this.fillChartData(labels, this.dataPoints);
+      this.setChartWindow(this.timeWindows[0]); // default to 1 month
+      this.loading = false;
     });
   },
   methods: {
@@ -93,9 +92,12 @@ export default {
 #gold {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   height: 100%;
   width: 100%;
+}
+.hide {
+  display: none;
 }
 #line-chart {
   width: 100% !important;
@@ -119,5 +121,9 @@ export default {
   border: 2px solid #c5b358;
   color: #c5b358;
   border-radius: 50%;
+}
+.loading-spinner {
+  display: flex;
+  margin: 0 auto;
 }
 </style>
