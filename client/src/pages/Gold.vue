@@ -6,7 +6,7 @@
       <h3
         :key="window.name"
         v-for="window in timeWindows"
-        @click="setChartWindow(window.percentYear)"
+        @click="setChartWindow(window)"
         :class="{timelineSelector: true, timeSelected: window.selected}"
       >{{window.name}}</h3>
     </div>
@@ -45,7 +45,7 @@ export default {
     Services.getPrices().then(res => {
       this.dataPoints = res.data;
       this.startPrice = res.data[0].y;
-      this.price = res.data[res.data.length - 1].y;
+      this.price = res.data[res.data.length - 1].y.toFixed(2);
       let labels = this.dataPoints.map(point =>
         moment.unix(point.x / 1000).format("MM/DD/YYYY")
       );
@@ -65,17 +65,25 @@ export default {
         ]
       };
     },
-    setChartWindow(percentYear) {
+    toggleSelectedWindow(selectedWindow) {
+      let prevSelectedWindow = this.timeWindows.find(window => window.selected);
+      let newSelectedWindow = this.timeWindows.find(
+        window => window.name === selectedWindow.name
+      );
+      prevSelectedWindow.selected = false;
+      newSelectedWindow.selected = true;
+    },
+    setChartWindow(window) {
       let numPoints = this.dataPoints.length;
-      let startIndex = Math.floor(numPoints * (1 - percentYear));
+      let startIndex = Math.floor(numPoints * (1 - window.percentYear));
       let chartPoints = this.dataPoints.slice(startIndex);
-
       let labels = chartPoints.map(point =>
         moment.unix(point.x / 1000).format("MM/DD/YYYY")
       );
       this.fillChartData(labels, chartPoints);
       this.startPrice = chartPoints[0].y;
-      this.price = chartPoints[chartPoints.length - 1].y;
+      this.price = chartPoints[chartPoints.length - 1].y.toFixed(2);
+      this.toggleSelectedWindow(window);
     }
   }
 };
