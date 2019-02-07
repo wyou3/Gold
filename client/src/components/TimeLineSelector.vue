@@ -4,8 +4,10 @@
       :key="window.name"
       v-for="window in timeWindows"
       @click="toggleSelectedWindow(window)"
-      :class="{timelineSelector: true, timeSelected: window.selected}"
-    >{{window.name}}</h3>
+      :class="{ timelineSelector: true, timeSelected: window.selected }"
+    >
+      {{ window.name }}
+    </h3>
   </div>
 </template>
 
@@ -14,25 +16,25 @@ export default {
   data() {
     return {
       timeWindows: [
-        { name: "1M", percentYear: 1 / 12, selected: true },
-        { name: "3M", percentYear: 1 / 4, selected: false },
-        { name: "6M", percentYear: 1 / 2, selected: false },
-        { name: "1Y", percentYear: 1, selected: false }
+        { name: '1M', percentYear: 1 / 12, selected: true },
+        { name: '3M', percentYear: 1 / 4, selected: false },
+        { name: '6M', percentYear: 1 / 2, selected: false },
+        { name: '1Y', percentYear: 1, selected: false }
       ]
-    };
+    }
   },
   methods: {
     toggleSelectedWindow(selectedWindow) {
-      let prevSelectedWindow = this.timeWindows.find(window => window.selected);
+      let prevSelectedWindow = this.timeWindows.find(window => window.selected)
       let newSelectedWindow = this.timeWindows.find(
         window => window.name === selectedWindow.name
-      );
-      prevSelectedWindow.selected = false;
-      newSelectedWindow.selected = true;
-      this.$emit("setChartWindow", selectedWindow.percentYear)
+      )
+      prevSelectedWindow.selected = false
+      newSelectedWindow.selected = true
+      this.$emit('setChartWindow', selectedWindow.percentYear)
     }
   }
-};
+}
 </script>
 
 <style scoped>

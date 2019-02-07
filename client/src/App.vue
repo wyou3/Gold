@@ -3,14 +3,14 @@
 </template>
 
 <script>
-import Gold from "./pages/Gold.vue";
+import Gold from './pages/Gold.vue'
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
     Gold
   }
-};
+}
 </script>
 
 <style>

@@ -2,21 +2,26 @@
   <div id="gold">
     <price-ticker :price="price" :start-price="startPrice"></price-ticker>
     <ball-spin-fade-loader v-if="loading" class="loading-spinner" color="#000000" size="20px"></ball-spin-fade-loader>
-    <line-chart else :class="{hide: loading}" :chart-data="datacollection" :options="chartOptions"></line-chart>
+    <line-chart
+      else
+      :class="{ hide: loading }"
+      :chart-data="datacollection"
+      :options="chartOptions"
+    ></line-chart>
     <timeline-selector v-on:setChartWindow="setChartByPercentYear"></timeline-selector>
   </div>
 </template>
 
 <script>
-import moment from "moment";
-import Services from "../services/services.js";
-import PriceTicker from "../components/PriceTicker.vue";
-import LineChart from "../components/LineChart.js";
-import TimelineSelector from "../components/TimeLineSelector.vue";
-import ChartOptions from "../styles/chartOptions.js";
+import moment from 'moment'
+import Services from '../services/services.js'
+import PriceTicker from '../components/PriceTicker.vue'
+import LineChart from '../components/LineChart.js'
+import TimelineSelector from '../components/TimeLineSelector.vue'
+import ChartOptions from '../styles/chartOptions.js'
 
 export default {
-  name: "GoldChart",
+  name: 'GoldChart',
   components: {
     PriceTicker,
     LineChart,
@@ -30,14 +35,14 @@ export default {
       dataPoints: [],
       datacollection: null,
       chartOptions: ChartOptions
-    };
+    }
   },
   mounted() {
     Services.getPrices().then(res => {
-      this.dataPoints = res.data;
-      this.setChartByPercentYear(1/12); // default to 1 month
-      this.loading = false;
-    });
+      this.dataPoints = res.data
+      this.setChartByPercentYear(1 / 12) // default to 1 month
+      this.loading = false
+    })
   },
   methods: {
     fillChartData(labels, dataPoints) {
@@ -46,25 +51,25 @@ export default {
         datasets: [
           {
             fill: false,
-            borderColor: "#C5B358",
+            borderColor: '#C5B358',
             data: dataPoints
           }
         ]
-      };
+      }
     },
     setChartByPercentYear(percentYear) {
-      let numPoints = this.dataPoints.length;
-      let startIndex = Math.floor(numPoints * (1 - percentYear));
-      let chartPoints = this.dataPoints.slice(startIndex);
+      let numPoints = this.dataPoints.length
+      let startIndex = Math.floor(numPoints * (1 - percentYear))
+      let chartPoints = this.dataPoints.slice(startIndex)
       let labels = chartPoints.map(point =>
-        moment.unix(point.x / 1000).format("MMM Do YYYY")
-      );
-      this.fillChartData(labels, chartPoints);
-      this.startPrice = chartPoints[0].y;
-      this.price = chartPoints[chartPoints.length - 1].y;
+        moment.unix(point.x / 1000).format('MMM Do YYYY')
+      )
+      this.fillChartData(labels, chartPoints)
+      this.startPrice = chartPoints[0].y
+      this.price = chartPoints[chartPoints.length - 1].y
     }
   }
-};
+}
 </script>
 
 <style scoped>
