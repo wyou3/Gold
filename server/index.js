@@ -1,15 +1,21 @@
 const puppeteer = require('puppeteer')
 const express = require('express')
+const moment = require('moment')
 const cors = require('cors')
 const app = express()
 const port = 3000
 
 let goldChartPrices
+let lastRequest
 
 app.use(cors())
 
 app.get('/prices', async (req, res) => {
-  if (goldChartPrices) {
+  if (
+    goldChartPrices &&
+    moment.duration(moment().diff(lastRequest)).asMinutes() < 10
+  ) {
+    console.log('cached')
     res.send(goldChartPrices)
     return
   }
@@ -27,6 +33,8 @@ app.get('/prices', async (req, res) => {
   })
   await browser.close()
   goldChartPrices = chartData
+  lastRequest = moment()
+  console.log('new request')
   res.send(goldChartPrices)
 })
 
