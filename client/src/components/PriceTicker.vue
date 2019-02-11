@@ -1,10 +1,9 @@
 <template>
   <div id="price">
     <h1 class="priceText">${{ this.price }}</h1>
-    <p :class="{ green: this.positiveChange(), red: !this.positiveChange() }">
-      {{ this.percentChangeText() }}
-    </p>
-    <p></p>
+    <p
+      :class="{ green: this.positiveChange(), red: !this.positiveChange() }"
+    >{{ this.percentChangeText() }}</p>
   </div>
 </template>
 
@@ -24,9 +23,7 @@ export default {
     },
     percentChange() {
       if (!(this.price && this.startPrice)) return 0 // placeholder
-      return (((this.price - this.startPrice) / this.startPrice) * 100).toFixed(
-        2
-      )
+      return (((this.price - this.startPrice) / this.startPrice) * 100).toFixed(2)
     }
   }
 }

@@ -5,9 +5,11 @@
       v-for="window in timeWindows"
       @click="toggleSelectedWindow(window)"
       :class="{ timelineSelector: true, timeSelected: window.selected }"
-    >
-      {{ window.name }}
-    </h3>
+    >{{ window.name }}</h3>
+    <h3
+      :class="{ gridSelector: true, gridSelected: grid.selected }"
+      @click="toggleChartGrid()"
+    >{{ grid.name }}</h3>
   </div>
 </template>
 
@@ -20,7 +22,8 @@ export default {
         { name: '3M', percentYear: 1 / 4, selected: false },
         { name: '6M', percentYear: 1 / 2, selected: false },
         { name: '1Y', percentYear: 1, selected: false }
-      ]
+      ],
+      grid: { name: '#', selected: false }
     }
   },
   methods: {
@@ -32,6 +35,10 @@ export default {
       prevSelectedWindow.selected = false
       newSelectedWindow.selected = true
       this.$emit('setChartWindow', selectedWindow.percentYear)
+    },
+    toggleChartGrid() {
+      this.grid.selected = !this.grid.selected
+      this.$emit('toggleChartGrid')
     }
   }
 }
@@ -43,6 +50,7 @@ export default {
   justify-content: center;
   margin-top: 150px;
 }
+.gridSelector,
 .timelineSelector {
   height: 30px;
   width: 30px;
@@ -52,10 +60,18 @@ export default {
   line-height: 30px;
   text-align: center;
 }
-.timelineSelector:hover {
-  color: #c5b358;
+.gridSelector {
+  font-family: 'Courier New', Courier, monospace;
 }
-.timeSelected {
+.timelineSelector:hover,
+.gridSelector:hover {
+  font-size: 21px;
+  color: #c5b358;
+  cursor: pointer;
+}
+.timeSelected,
+.gridSelected {
+  font-size: 21px;
   border: 2px solid #c5b358;
   color: #c5b358;
   border-radius: 50%;

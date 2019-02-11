@@ -1,14 +1,17 @@
 <template>
   <div id="gold">
-    <price-ticker :price="price" :start-price="startPrice"></price-ticker>
-    <ball-spin-fade-loader v-if="loading" class="loading-spinner" color="#000000" size="20px"></ball-spin-fade-loader>
+    <price-ticker :price="price" :start-price="startPrice"/>
+    <ball-spin-fade-loader v-if="loading" class="loading-spinner" color="#000000" size="20px"/>
     <line-chart
       else
       :class="{ hide: loading }"
       :chart-data="datacollection"
       :options="chartOptions"
-    ></line-chart>
-    <timeline-selector v-on:setChartWindow="setChartByPercentYear"></timeline-selector>
+    />
+    <chart-options-selector
+      v-on:setChartWindow="setChartByPercentYear"
+      v-on:toggleChartGrid="toggleGrid"
+    />
   </div>
 </template>
 
@@ -17,15 +20,16 @@ import moment from 'moment'
 import Services from '../services/services.js'
 import PriceTicker from '../components/PriceTicker.vue'
 import LineChart from '../components/LineChart.js'
-import TimelineSelector from '../components/TimeLineSelector.vue'
+import ChartOptionsSelector from '../components/ChartOptionsSelector.vue'
 import ChartOptions from '../styles/chartOptions.js'
+import ChartScalesOptions from '../styles/chartScalesOptions.js'
 
 export default {
   name: 'GoldChart',
   components: {
     PriceTicker,
     LineChart,
-    TimelineSelector
+    ChartOptionsSelector
   },
   data() {
     return {
@@ -34,7 +38,7 @@ export default {
       startPrice: 0,
       dataPoints: [],
       datacollection: null,
-      chartOptions: ChartOptions
+      chartOptions: { ...ChartOptions }
     }
   },
   mounted() {
@@ -67,6 +71,18 @@ export default {
       this.fillChartData(labels, chartPoints)
       this.startPrice = chartPoints[0].y
       this.price = chartPoints[chartPoints.length - 1].y
+    },
+    toggleGrid() {
+      let scales = this.objectIsEmpty(this.chartOptions.scales)
+        ? { ...ChartScalesOptions }
+        : {}
+      this.chartOptions = {
+        ...this.chartOptions,
+        scales: scales
+      }
+    },
+    objectIsEmpty(obj) {
+      return Object.entries(obj).length === 0 && obj.constructor === Object
     }
   }
 }
